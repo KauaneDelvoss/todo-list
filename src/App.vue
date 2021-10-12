@@ -1,67 +1,78 @@
 <template>
-  <div class="container">
-    <h2>{{ titulo }}</h2>
-    <div class="input-group">
-      <input
-        type="text"
-        class="form-control"
-        @keyup.enter="adicionarTarefa()"
-        v-model="novaTarefa"
-      />
-      <span class="input-group-btn">
-        <button @click="adicionarTarefa()" class="btn btn-success">
-          Adicionar
-        </button>
-      </span>
-    </div>
-    <ul>
-      <li
-        v-for="(tarefa, index) in tarefas"
-        :key="index"
-        :class="{ removed: tarefa.checked }"
-      >
-        <input v-model="tarefa.checked" type="checkbox" />
-        <label for="">
-          {{ tarefa.titulo }}
-        </label>
-      </li>
-    </ul>
-    <p>
-      <em> Total de tarefas : </em> <span> {{ totalTarefas }} </span>
-    </p>
-    <p>
-      <em> Tarefas concluídas : </em> <span> {{ totalTarefasConcluidas }}</span>
-    </p>
-
-    <footer>
+  <section>
+    <cabecalho :valor="titulo" />
+    <div class="container">
+      <adicionartarefa v-on:adicionarTarefa="adicionarTarefa" />
+      <b-field label="Altere aqui o título da lista de tarefas!">
+        <b-input
+          type="text"
+          v-model="titulo"
+          size="is-small"
+          rounded="true"
+        ></b-input>
+      </b-field>
       <hr />
+      <listagem :tarefas="tarefas" />
+      <hr />
+      <p>
+        <em> Total de tarefas : </em> <span> {{ totalTarefas }} </span>
+      </p>
+      <p>
+        <em> Tarefas concluídas : </em>
+        <span> {{ totalTarefasConcluidas }}</span>
+      </p>
+
+      <!-- <hr />
       <em>Altere aqui o título da lista de tarefas</em>
-      <input type="text" v-model="titulo" />
-    </footer>
-  </div>
+      <input type="text" v-model="titulo" /> -->
+    </div>
+
+    <rodape />
+  </section>
 </template>
 
 <script>
+import Vue from "vue";
+import Buefy from "buefy";
+import "buefy/dist/buefy.css";
+
+Vue.use(Buefy);
+
+import cabecalho from "@/components/cabecalho";
+import rodape from "@/components/rodape";
+import listagem from "@/components/listagem";
+import adicionartarefa from "@/components/adicionartarefa";
 export default {
   name: "App",
+  components: { cabecalho, rodape, listagem, adicionartarefa },
   data() {
     return {
       titulo: "Minhas Tarefas",
       tarefas: [
-        { titulo: "Estudar", checked: false },
-        { titulo: "Ler", checked: false },
-        { titulo: "Lavar louça", checked: false },
+        {
+          titulo:
+            "Atrasar quase um mês para entregar o trabalho de programação",
+          checked: true,
+        },
+        { titulo: "Ver as notas do sigaa e se desesperar", checked: true },
+        {
+          titulo: "Implorar para o professor aceitar o trabalho",
+          checked: true,
+        },
+        { titulo: "Aprender a usar Buefy", checked: false },
+        {
+          titulo: "Esperar que o trabalho não esteja simples demais",
+          checked: true,
+        },
       ],
-      novaTarefa: "",
     };
   },
   methods: {
-    adicionarTarefa() {
+    adicionarTarefa(novaTarefa) {
       this.tarefas.push({
-        titulo: this.novaTarefa,
+        titulo: novaTarefa,
         checked: false,
       });
-      this.novaTarefa = "";
     },
   },
   computed: {
@@ -77,7 +88,7 @@ export default {
 
 <style>
 .container {
-  width: 60%;
+  width: 40%;
   margin: 20px auto 0px auto;
 }
 .removed {
@@ -91,5 +102,8 @@ export default {
 ul li {
   list-style-type: none;
   margin: 5px;
+}
+h2 {
+  padding: 40px 0px 0px 0px;
 }
 </style>
